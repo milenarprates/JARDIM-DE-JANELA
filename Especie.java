@@ -1,4 +1,3 @@
-/* cada tipo de planta pode ter um intervalo entre as regas e uma necessidade de luz diferentes */
 
 public final class Especie { //imutavel
     private final TipoPlanta tipo;

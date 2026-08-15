@@ -13,7 +13,6 @@ public abstract class Planta {
     protected int nivelAgua;
     protected int qtdRegas;
     protected boolean taViva;
-    protected boolean precisaDeAgua;
 
     public Planta(String nome, Especie especie) {
 
@@ -59,6 +58,7 @@ public abstract class Planta {
 
     /* alguns metodos da planta */
 
+    //basicamenta aumenta o nivel de agua da planta e atualiza a hora da ultima rega
     public void serRegada() {
 
         if(taViva){
@@ -76,16 +76,16 @@ public abstract class Planta {
 
     }
 
-    //calcula o nivel de agua esperado da planta com base no tempo desde a ultima rega e na especie da planta
-    // ... de acordo com o intervalo de rega e a perda de agua por intervalo da especie
-    public void precisarAgua() {
+    //decrementa o nivel de agua
+    public void absorveAgua() {
         if (!taViva) return;
 
         long tempoDesdeUltimaRega = System.currentTimeMillis() - ultimaRega;
         long intervalosPassados = tempoDesdeUltimaRega / especie.getIntervaloRega();
-        int nivelEsperado = MAX_NIVEL_AGUA - (int) (intervalosPassados * especie.getPerdaAguaPorIntervalo());
 
-        nivelAgua = Math.min(nivelAgua, Math.max(nivelEsperado, 0));
+        nivelAgua -= intervalosPassados * especie.getPerdaAguaPorIntervalo();
+        nivelAgua = Math.max(nivelAgua, 0);
+        ultimaRega += intervalosPassados * especie.getIntervaloRega();
     }
 
     public int recebeLuz(){
@@ -93,10 +93,9 @@ public abstract class Planta {
         return nivelLuz;
     }
 
-    public void colher(){
-
+    public boolean precisaSerRegada() {
+        return nivelAgua < especie.getPerdaAguaPorIntervalo();
     }
-
     //cada subtipo de planta implementa uma lógica de crescimento diferente
     public abstract void crescer();
 

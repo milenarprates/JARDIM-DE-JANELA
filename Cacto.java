@@ -14,11 +14,11 @@ public class Cacto extends Planta {
 
         long idadeMs = System.currentTimeMillis() - tempoPlantio;
 
-        if (estagio == FaseCrescimento.SEMENTE && idadeMs >= 5_000) {
+        if (estagio == FaseCrescimento.SEMENTE && idadeMs >= 15_000) {
             estagio = FaseCrescimento.MUDA;
-        } else if (estagio == FaseCrescimento.MUDA && idadeMs >= 20_000) {
+        } else if (estagio == FaseCrescimento.MUDA && idadeMs >= 35_000) {
             estagio = FaseCrescimento.JOVEM;
-        } else if (estagio == FaseCrescimento.JOVEM && idadeMs >= 30_000) {
+        } else if (estagio == FaseCrescimento.JOVEM && idadeMs >= 60_000) {
             estagio = FaseCrescimento.ADULTA;
         }
 
