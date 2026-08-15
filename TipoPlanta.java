@@ -1,3 +1,3 @@
 public enum TipoPlanta {
-    LIRIO, CACTO, TULIPA //etc..
+    LIRIO, CACTO, TOMATEIRO //etc..
 }

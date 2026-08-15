@@ -13,6 +13,7 @@ public abstract class Planta {
     protected int nivelAgua;
     protected int qtdRegas;
     protected boolean taViva;
+    protected boolean precisaDeAgua;
 
     public Planta(String nome, Especie especie) {
 

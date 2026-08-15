@@ -4,7 +4,7 @@ public class Main {
 
     final static int REGA_LIRIO = 20;
     final static int LUZ_LIRIO = 10;
-    final static int PERDA_AGUA_LIRIO = 5;
+    final static int PERDA_AGUA_LIRIO = 5 * 1000;
     final static int GANHO_LUZ_LIRIO = 5;
 
     public static void main(String[] args) {
