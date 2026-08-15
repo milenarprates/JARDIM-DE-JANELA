@@ -2,15 +2,20 @@
 /* pensei em implementar o padrao observer p notificar as atualizacoes do estado da planta.. */
 /* ou o factory, pra toda vez q o jogador quiser plantar uma nova semente */
 
-    public final class Especie { //imutavel
+public final class Especie { //imutavel
     private final TipoPlanta tipo;
     private final long intervaloRega;
     private final int luzNecessaria;
+    private final int perdaAguaPorIntervalo;
+    private final int ganhoLuzPorColeta;
 
-    public Especie(TipoPlanta tipo, long intervaloRega, int luzNecessaria) {
+    public Especie(TipoPlanta tipo, long intervaloRega, int luzNecessaria,
+                   int perdaAguaPorIntervalo, int ganhoLuzPorColeta) {
         this.tipo = tipo;
         this.intervaloRega = intervaloRega;
         this.luzNecessaria = luzNecessaria;
+        this.perdaAguaPorIntervalo = perdaAguaPorIntervalo;
+        this.ganhoLuzPorColeta = ganhoLuzPorColeta;
     }
 
     public TipoPlanta getTipo() {
@@ -25,4 +30,11 @@
         return luzNecessaria;
     }
 
+    public int getPerdaAguaPorIntervalo() {
+        return perdaAguaPorIntervalo;
+    }
+
+    public int getGanhoLuzPorColeta() {
+        return ganhoLuzPorColeta;
+    }
 }

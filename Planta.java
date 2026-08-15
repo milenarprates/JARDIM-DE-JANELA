@@ -1,4 +1,5 @@
-public class Planta {
+public abstract class Planta {
+
     //atributos de classe
     static final int MAX_NIVEL_LUZ = 100;
     static final int MAX_NIVEL_AGUA = 100;
@@ -8,7 +9,6 @@ public class Planta {
     protected Especie especie;
     protected FaseCrescimento estagio;
     protected long ultimaRega;
-    protected long momentoQueSecou;
     protected int nivelLuz;
     protected int nivelAgua;
     protected int qtdRegas;
@@ -74,46 +74,32 @@ public class Planta {
         }
 
     }
+
+    //calcula o nivel de agua esperado da planta com base no tempo desde a ultima rega e na especie da planta
+    // ... de acordo com o intervalo de rega e a perda de agua por intervalo da especie
     public void precisarAgua() {
         if (!taViva) return;
 
         long tempoDesdeUltimaRega = System.currentTimeMillis() - ultimaRega;
         long intervalosPassados = tempoDesdeUltimaRega / especie.getIntervaloRega();
-        int nivelEsperado = MAX_NIVEL_AGUA - (int) (intervalosPassados * 10);
+        int nivelEsperado = MAX_NIVEL_AGUA - (int) (intervalosPassados * especie.getPerdaAguaPorIntervalo());
 
         nivelAgua = Math.min(nivelAgua, Math.max(nivelEsperado, 0));
-
-        // se o nível de água cair para 0 por x tempo, a planta morre
-        if (nivelAgua == 0) {
-            momentoQueSecou = System.currentTimeMillis();
-        }
     }
 
-    public int receberLuz() {
-        // ainda tô pensando nessa parte aqui..
-        // talvez seja melhor implementar uma classe janela que vai controlar a quantidade de luz que entra no jardim,
-        // e a planta vai receber essa informação
-        return 0;
+    public int recebeLuz(){
+        nivelLuz = Math.min(nivelLuz + especie.getGanhoLuzPorColeta(), MAX_NIVEL_LUZ);
+        return nivelLuz;
     }
 
-    public void colher() {};
-
-    public void crescer(){
-
-        if(taViva){
-            if(estagio == FaseCrescimento.SEMENTE && qtdRegas >= 3){
-                estagio = FaseCrescimento.MUDA;
-            } else if(estagio == FaseCrescimento.MUDA && qtdRegas >= 6){
-                estagio = FaseCrescimento.JOVEM;
-            } else if(estagio == FaseCrescimento.JOVEM && qtdRegas >= 9){
-                estagio = FaseCrescimento.ADULTA;
-            } else if(estagio == FaseCrescimento.ADULTA && qtdRegas >= 12){
-                estagio = getEstagio();
-            }
-        }
+    public void colher(){
 
     }
-    public void exibirInfo() {
+
+    //cada subtipo de planta implementa uma lógica de crescimento diferente
+    public abstract void crescer();
+
+    public void exibeInfo() {
         System.out.println("---------------------------------");
         System.out.println("Nome: " + nome);
         System.out.println("Espécie: " + especie.getTipo());
