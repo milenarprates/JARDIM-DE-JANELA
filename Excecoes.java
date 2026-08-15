@@ -1,4 +1,4 @@
-public class JardimCheio extends Exception {
+/* public class JardimCheio extends Exception {
     public JardimCheio(String message) {
         super(message);
     }
@@ -8,6 +8,6 @@ public class regaInvalida extends Exception { //nao pode serRegada se a planta t
     public regaInvalida(String message) {
         super(message);
     }
-}
+} */
 
 

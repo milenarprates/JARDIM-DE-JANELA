@@ -2,7 +2,7 @@
 /* pensei em implementar o padrao observer p notificar as atualizacoes do estado da planta.. */
 /* ou o factory, pra toda vez q o jogador quiser plantar uma nova semente */
 
-public final class Especie { //imutavel
+    public final class Especie { //imutavel
     private final TipoPlanta tipo;
     private final long intervaloRega;
     private final int luzNecessaria;

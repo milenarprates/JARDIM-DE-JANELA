@@ -1,4 +1,4 @@
-public abstract class Planta {
+public class Planta {
     //atributos de classe
     static final int MAX_NIVEL_LUZ = 100;
     static final int MAX_NIVEL_AGUA = 100;
@@ -8,20 +8,21 @@ public abstract class Planta {
     protected Especie especie;
     protected FaseCrescimento estagio;
     protected long ultimaRega;
+    protected long momentoQueSecou;
     protected int nivelLuz;
     protected int nivelAgua;
-    protected int idadeDias;
+    protected int qtdRegas;
     protected boolean taViva;
 
-    public Planta(String nome, Especie especie, FaseCrescimento estagio, long ultimaRega,
-                  int nivelLuz, int nivelAgua, int idadeDias, boolean taViva) {
+    public Planta(String nome, Especie especie) {
+
         this.nome = nome;
         this.especie = especie;
         this.estagio = FaseCrescimento.SEMENTE;
         this.ultimaRega = System.currentTimeMillis();
         this.nivelLuz = 0;
         this.nivelAgua = 0;
-        this.idadeDias = 1;
+        this.qtdRegas = 0;
         this.taViva = true;
     }
 
@@ -43,17 +44,13 @@ public abstract class Planta {
         return ultimaRega;
     }
 
-    public int getQtdRegas() { return qtdRegas; }
-
     public int getNivelLuz() {
         return nivelLuz;
     }
 
     public int getNivelAgua() { return  nivelAgua; }
 
-    public int getIdadeDias() {
-        return idadeDias;
-    }
+    public int getQtdRegas() { return qtdRegas; }
 
     public boolean isTaViva() {
         return taViva;
@@ -66,60 +63,64 @@ public abstract class Planta {
         if(taViva){
             ultimaRega = System.currentTimeMillis();
             nivelAgua += VALOR_REGA;
+            qtdRegas++;
 
             if(nivelAgua > MAX_NIVEL_AGUA){
                 nivelAgua = MAX_NIVEL_AGUA;
             }
 
         } else {
-            // throw new regaInvalida("A planta está morta e não pode ser regada.");
+            // throw new regaInvalida;
         }
 
     }
+    public void precisarAgua() {
+        if (!taViva) return;
 
-    public int receberLuz(){
+        long tempoDesdeUltimaRega = System.currentTimeMillis() - ultimaRega;
+        long intervalosPassados = tempoDesdeUltimaRega / especie.getIntervaloRega();
+        int nivelEsperado = MAX_NIVEL_AGUA - (int) (intervalosPassados * 10);
+
+        nivelAgua = Math.min(nivelAgua, Math.max(nivelEsperado, 0));
+
+        // se o nível de água cair para 0 por x tempo, a planta morre
+        if (nivelAgua == 0) {
+            momentoQueSecou = System.currentTimeMillis();
+        }
+    }
+
+    public int receberLuz() {
         // ainda tô pensando nessa parte aqui..
         // talvez seja melhor implementar uma classe janela que vai controlar a quantidade de luz que entra no jardim,
         // e a planta vai receber essa informação
         return 0;
     }
 
-    public void colher(){
-
-    }
+    public void colher() {};
 
     public void crescer(){
 
         if(taViva){
-            idadeDias++;
-        }
-
-        switch(idadeDias){
-            case 1:
-                estagio = FaseCrescimento.SEMENTE;
-                break;
-            case 5:
+            if(estagio == FaseCrescimento.SEMENTE && qtdRegas >= 3){
                 estagio = FaseCrescimento.MUDA;
-                break;
-            case 10:
+            } else if(estagio == FaseCrescimento.MUDA && qtdRegas >= 6){
                 estagio = FaseCrescimento.JOVEM;
-                break;
-            case 15:
+            } else if(estagio == FaseCrescimento.JOVEM && qtdRegas >= 9){
                 estagio = FaseCrescimento.ADULTA;
-                break;
-            default:
-                estagio = FaseCrescimento.MORTA;
-                taViva = false;
+            } else if(estagio == FaseCrescimento.ADULTA && qtdRegas >= 12){
+                estagio = getEstagio();
+            }
         }
 
     }
-    public void exibirInfo(){
+    public void exibirInfo() {
+        System.out.println("---------------------------------");
         System.out.println("Nome: " + nome);
         System.out.println("Espécie: " + especie.getTipo());
         System.out.println("Estágio de Crescimento: " + estagio);
         System.out.println("Nível de Luz: " + nivelLuz);
         System.out.println("Nível de Água: " + nivelAgua);
-        System.out.println("Idade (dias): " + idadeDias);
+        System.out.println("Quantidade de Regas: " + qtdRegas);
     }
 
 }
