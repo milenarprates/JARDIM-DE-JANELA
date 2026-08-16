@@ -1,3 +1,5 @@
+import Exceptions.RegaInvalidaException;
+
 public abstract class Planta {
 
     //atributos de classe
@@ -15,7 +17,6 @@ public abstract class Planta {
     protected boolean taViva;
 
     public Planta(String nome, Especie especie) {
-
         this.nome = nome;
         this.especie = especie;
         this.estagio = FaseCrescimento.SEMENTE;
@@ -59,7 +60,7 @@ public abstract class Planta {
     /* alguns metodos da planta */
 
     //basicamenta aumenta o nivel de agua da planta e atualiza a hora da ultima rega
-    public void serRegada() {
+    public void serRegada() throws RegaInvalidaException {
 
         if(taViva){
             ultimaRega = System.currentTimeMillis();
@@ -71,7 +72,7 @@ public abstract class Planta {
             }
 
         } else {
-            // throw new regaInvalida;
+            throw new RegaInvalidaException(nome);
         }
 
     }
@@ -96,6 +97,7 @@ public abstract class Planta {
     public boolean precisaSerRegada() {
         return nivelAgua < especie.getPerdaAguaPorIntervalo();
     }
+
     //cada subtipo de planta implementa uma lógica de crescimento diferente
     public abstract void crescer();
 

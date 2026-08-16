@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+import Exceptions.JardimCheioException;
+import Exceptions.PlantaInadequadaException;
+import Exceptions.RegaInvalidaException;
+
 public class Jardim {
 
     private ArrayList<Planta> plantas;
@@ -19,6 +23,17 @@ public class Jardim {
         plantas.add(planta);
     }
 
+    public double colher(int indice) throws PlantaInadequadaException {
+        Planta plantaTemp = plantas.get(indice);
+        if(plantaTemp.getEstagio() != FaseCrescimento.ADULTA) throw new PlantaInadequadaException(plantaTemp.getNome());
+        plantas.remove(indice);
+        return plantaTemp.getEspecie().getValor() * 1.25; // ao colher, ganha o valor da planta + lucro
+    }
+
+    public void regar(int indice) throws RegaInvalidaException {
+        plantas.get(indice).serRegada();
+    }
+
     public boolean isJanelaAberta() {
         return janelaAberta;
     }
@@ -34,7 +49,7 @@ public class Jardim {
             if (janelaAberta) {
                 planta.recebeLuz();
             }
-
+            
             planta.crescer();
         }
     }

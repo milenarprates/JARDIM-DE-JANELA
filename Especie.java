@@ -5,14 +5,16 @@ public final class Especie { //imutavel
     private final int luzNecessaria;
     private final int perdaAguaPorIntervalo;
     private final int ganhoLuzPorColeta;
+    private final double valor;
 
     public Especie(TipoPlanta tipo, long intervaloRega, int luzNecessaria,
-                   int perdaAguaPorIntervalo, int ganhoLuzPorColeta) {
+                   int perdaAguaPorIntervalo, int ganhoLuzPorColeta, double valor) {
         this.tipo = tipo;
         this.intervaloRega = intervaloRega;
         this.luzNecessaria = luzNecessaria;
         this.perdaAguaPorIntervalo = perdaAguaPorIntervalo;
         this.ganhoLuzPorColeta = ganhoLuzPorColeta;
+        this.valor = valor;
     }
 
     public TipoPlanta getTipo() {
@@ -33,5 +35,9 @@ public final class Especie { //imutavel
 
     public int getGanhoLuzPorColeta() {
         return ganhoLuzPorColeta;
+    }
+
+    public double getValor() {
+        return valor;
     }
 }
