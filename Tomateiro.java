@@ -7,6 +7,9 @@ public class Tomateiro extends Planta {
         this.usouFertilizante = false;
     }
 
+    public void setUsouFertilizante(boolean usouFertilizante) {
+        this.usouFertilizante = usouFertilizante;
+    }
     @Override
     public void crescer() {
         if(!taViva) return;

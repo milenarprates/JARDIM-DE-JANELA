@@ -23,15 +23,27 @@ public class Jardim {
         plantas.add(planta);
     }
 
-    public double colher(int indice) throws PlantaInadequadaException {
+    public Planta colher(int indice) throws PlantaInadequadaException {
         Planta plantaTemp = plantas.get(indice);
+
         if(plantaTemp.getEstagio() != FaseCrescimento.ADULTA) throw new PlantaInadequadaException(plantaTemp.getNome());
         plantas.remove(indice);
-        return plantaTemp.getEspecie().getValor() * 1.25; // ao colher, ganha o valor da planta + lucro
+
+        return plantaTemp;
     }
 
     public void regar(int indice) throws RegaInvalidaException {
         plantas.get(indice).serRegada();
+    }
+
+    // usa fertilizante em uma planta específica do jardim. retorna true se a planta for um tomateiro
+    public boolean usarFertilizante(int indice) {
+        if(plantas.get(indice) instanceof Tomateiro) {
+            Tomateiro tomateiro = (Tomateiro) plantas.get(indice);
+            tomateiro.setUsouFertilizante(true);
+            return true;
+        }
+        return false;
     }
 
     public boolean isJanelaAberta() {
@@ -49,7 +61,7 @@ public class Jardim {
             if (janelaAberta) {
                 planta.recebeLuz();
             }
-            
+
             planta.crescer();
         }
     }
