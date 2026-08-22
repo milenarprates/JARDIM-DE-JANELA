@@ -4,7 +4,11 @@ import Exceptions.JardimCheioException;
 import Exceptions.PlantaInadequadaException;
 import Exceptions.RegaInvalidaException;
 
-public class Jardim {
+import java.io.Serializable;
+
+public class Jardim implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private ArrayList<Planta> plantas;
     private int capacidadeMaxima;

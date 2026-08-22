@@ -1,5 +1,9 @@
+import java.io.Serializable;
 
-public final class Especie { //imutavel
+public final class Especie implements Serializable { //imutavel
+
+    private static final long serialVersionUID = 1L;
+
     private final TipoPlanta tipo;
     private final long intervaloRega;
     private final int luzNecessaria;

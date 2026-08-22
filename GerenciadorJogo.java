@@ -1,18 +1,29 @@
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import Exceptions.JardimCheioException;
 import Exceptions.PlantaInadequadaException;
 import Exceptions.RegaInvalidaException;
+import java.io.IOException;
 
-public class Gerenciador {
+public class GerenciadorJogo {
 
     private Jardim jardim;
     private Inventario inventario;
 
-    public Gerenciador() {
+    public GerenciadorJogo() {
         this.jardim = new Jardim();
         this.inventario = new Inventario();
+    }
+
+    public void salvarJogo() throws IOException {
+        GerenciadorArquivos.escrever(jardim, inventario);
+    }
+
+    public void recarregarJogo() throws IOException, ClassNotFoundException {
+        this.inventario = GerenciadorArquivos.lerInventario();
+        this.jardim = GerenciadorArquivos.lerJardim();
     }
 
     // planta uma semente (do inventario)

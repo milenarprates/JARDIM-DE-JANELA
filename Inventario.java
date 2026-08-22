@@ -1,7 +1,12 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Inventario {
+import java.io.Serializable;
+
+public class Inventario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private ArrayList<Planta> sementes;
     private HashSet<Ferramenta> ferramentas;
 

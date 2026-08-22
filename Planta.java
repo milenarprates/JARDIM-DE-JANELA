@@ -1,6 +1,9 @@
 import Exceptions.RegaInvalidaException;
+import java.io.Serializable;
 
-public abstract class Planta {
+public abstract class Planta implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     //atributos de classe
     static final int MAX_NIVEL_LUZ = 100;
