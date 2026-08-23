@@ -1,7 +1,3 @@
-import java.io.IOError;
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import Exceptions.JardimCheioException;
 import Exceptions.PlantaInadequadaException;
 import Exceptions.RegaInvalidaException;
@@ -51,6 +47,14 @@ public class GerenciadorJogo {
 
     public void atualizarJardim() { // chama atualizarTodasPlantas
         jardim.atualizarTodasPlantas();
+    }
+
+    public Jardim getJardim() {
+        return jardim;
+    }
+
+    public Inventario getInventario() {
+        return inventario;
     }
 
 }

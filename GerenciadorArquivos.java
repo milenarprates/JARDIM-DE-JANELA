@@ -47,4 +47,8 @@ public class GerenciadorArquivos {
             throw new FileNotFoundException("Arquivo não encontrado: " + CAMINHO_INVENTARIO);
         }
     }
+
+    public static boolean existeArquivo() {
+        return Files.exists(CAMINHO_JARDIM) && Files.exists(CAMINHO_INVENTARIO);
+    }
 }

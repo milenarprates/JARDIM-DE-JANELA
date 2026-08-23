@@ -33,4 +33,11 @@ public class Inventario implements Serializable {
     public boolean possuiFerramenta(Ferramenta ferramenta) {
         return ferramentas.contains(ferramenta);
     }
+
+    public void exibirSementes() {
+        for(int i = 0; i < sementes.size(); i++) {
+            Planta sementeTemp = sementes.get(i);
+            System.out.println("Semente " + i + " - " + sementeTemp.getNome() + " / " + sementeTemp.getEspecie().getTipo());
+        }
+    }
 }

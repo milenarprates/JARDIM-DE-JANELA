@@ -143,6 +143,7 @@ public abstract class Planta implements Serializable {
         System.out.println("Nível de Luz: " + nivelLuz);
         System.out.println("Nível de Água: " + nivelAgua);
         System.out.println("Quantidade de Regas: " + qtdRegas);
+        System.out.println("---------------------------------");
     }
 
 }
