@@ -64,9 +64,22 @@ public class Jardim implements Serializable {
 
             if (janelaAberta) {
                 planta.recebeLuz();
+            } else {
+                planta.perderLuz();
             }
 
             planta.crescer();
+        }
+    }
+
+    public ArrayList<Planta> getPlantas() {
+        return plantas;
+    }
+
+    public void exibirPlantas() {
+        for(int i = 0; i < plantas.size(); i++) {
+            Planta plantaTemp = plantas.get(i);
+            System.out.println("Semente " + i + " - " + plantaTemp.getNome() + " / " + plantaTemp.getEspecie().getTipo());
         }
     }
 }
