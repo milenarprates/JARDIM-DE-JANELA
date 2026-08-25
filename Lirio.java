@@ -14,8 +14,6 @@ public class Lirio extends Planta {
             estagio = FaseCrescimento.JOVEM;
         } else if (estagio == FaseCrescimento.JOVEM && qtdRegas >= 9) {
             estagio = FaseCrescimento.ADULTA;
-        } else {
-            System.out.println("O lírio ainda não está pronto para crescer. Regue mais vezes!");
         }
     }
 }

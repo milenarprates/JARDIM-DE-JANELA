@@ -30,9 +30,14 @@ public class Jardim implements Serializable {
     public Planta colher(int indice) throws PlantaInadequadaException {
         Planta plantaTemp = plantas.get(indice);
 
-        if(plantaTemp.getEstagio() != FaseCrescimento.ADULTA) throw new PlantaInadequadaException(plantaTemp.getNome());
-        plantas.remove(indice);
+        boolean prontaParaColher = plantaTemp.isTaViva() && plantaTemp.getEstagio() == FaseCrescimento.ADULTA;
+        boolean prontaParaDescartar = !plantaTemp.isTaViva();
 
+        if (!prontaParaColher && !prontaParaDescartar) {
+            throw new PlantaInadequadaException(plantaTemp.getNome());
+        }
+
+        plantas.remove(indice);
         return plantaTemp;
     }
 
@@ -40,7 +45,7 @@ public class Jardim implements Serializable {
         plantas.get(indice).serRegada();
     }
 
-    // usa fertilizante em uma planta específica do jardim. retorna true se a planta for um tomateiro
+    // retorna true se a planta for um tomateiro
     public boolean usarFertilizante(int indice) {
         if(plantas.get(indice) instanceof Tomateiro) {
             Tomateiro tomateiro = (Tomateiro) plantas.get(indice);
@@ -51,6 +56,7 @@ public class Jardim implements Serializable {
     }
 
     public boolean isJanelaAberta() {
+
         return janelaAberta;
     }
 
@@ -73,6 +79,7 @@ public class Jardim implements Serializable {
     }
 
     public ArrayList<Planta> getPlantas() {
+
         return plantas;
     }
 

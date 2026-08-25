@@ -29,7 +29,8 @@ public class GerenciadorJogo {
         inventario.removerSemente(indice);
     }
 
-    public Planta colherPlanta(int indice) throws PlantaInadequadaException { // colhe uma semente do jardim
+    // remove uma planta do jardim (serve tanto para planta viva e adulta quanto para planta morta)
+    public Planta colherPlanta(int indice) throws PlantaInadequadaException {
         return jardim.colher(indice);
     }
 
