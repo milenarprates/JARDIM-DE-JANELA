@@ -134,6 +134,7 @@ public abstract class Planta implements Serializable {
 
     //cada subtipo de planta implementa uma lógica de crescimento diferente
     public abstract void crescer();
+    public abstract String getDicaCrescimento();
 
     public void exibeInfo() {
         System.out.println("---------------------------------");
@@ -143,6 +144,7 @@ public abstract class Planta implements Serializable {
         System.out.println("Nível de Luz: " + nivelLuz);
         System.out.println("Nível de Água: " + nivelAgua);
         System.out.println("Quantidade de Regas: " + qtdRegas);
+        System.out.println(getDicaCrescimento());
         System.out.println("---------------------------------");
     }
 

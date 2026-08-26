@@ -9,19 +9,10 @@ import Exceptions.PlantaInadequadaException;
 import Exceptions.RegaInvalidaException;
 
 /*
- * ESTADOS DA TELA (máquina de estados simples, controlada por "estadoAtual"):
- *   JARDIM            -> tela principal: janela (aberta/fechada) + plantas + ícone do inventário
- *   INVENTARIO        -> painel lateral pra escolher o TIPO de semente a plantar
- *   NOME_PLANTA        -> campo de texto pra digitar o nome da nova planta
- *   ACOES_PLANTA       -> menu de ações sobre uma planta já plantada (regar, fertilizar, colher, info)
- *   INFO_PLANTA        -> janela com os dados da planta (fecha com "x")
- *
- * OBS: como não tem mais sistema de compra, "escolher uma semente" no inventário
- * já cria a planta (PlantaFactory) e planta direto no Jardim depois do nome ser digitado -
- * não passa pelo ArrayList<Planta> sementes do Inventario. Se vocês quiserem manter esse
- * passo intermediário (criar -> guardar -> plantar depois) é só trocar o método
- * confirmarPlantio() lá embaixo pra usar inventario.adicionarSemente(...) e
- * gerenciador.plantarSemente(indice) em vez de jardim.plantar(...) direto.
+
+ * OBS: aqui escolher no inventário já cria a planta (PlantaFactory) e planta direto no Jardim depois do nome ser digitado
+ * não passa pelo ArrayList<Planta> sementes do Inventario.
+
  */
 public class Sketch extends PApplet {
 
@@ -44,10 +35,10 @@ public class Sketch extends PApplet {
 
     int indicePlantaSelecionada = -1;
 
-    // variáveis para animação do regador
-    int tempoAnimacaoRegador = 0;
-    int indicePlantaRegando = -1;
-
+    // Variáveis para animação de itens (regador, fertilizante)
+    int tempoAnimacaoItem = 0;
+    int indicePlantaAnimada = -1;
+    String spriteAnimacaoAtual = "";
     HashMap<String, PImage> sprites = new HashMap<>();
 
     static final String[] NOMES_SPRITES = {
@@ -65,7 +56,6 @@ public class Sketch extends PApplet {
 
     public void setup() {
         for (String nome : NOMES_SPRITES) {
-            // procura "sprites/Nome.png" - ajuste o caminho se a pasta de imagens for outra
             sprites.put(nome, loadImage("sprites/" + nome + ".png"));
         }
 
@@ -155,36 +145,48 @@ public class Sketch extends PApplet {
             textAlign(CENTER);
             textSize(12);
             text(planta.getNome(), xy[0] + (TAM_SLOT - 10) / 2f, xy[1] + TAM_SLOT);
+
+            if (planta.isTaViva() && planta.precisaSerRegada()) {
+                desenharGota(xy[0] + 120, xy[1] + 220);
+            }
         }
     }
 
+    // gota simples desenhada com formas do Processing (sem precisar de sprite novo)
+    void desenharGota(float cx, float cy) {
+        noStroke();
+        fill(50, 140, 230);
+        ellipse(cx, cy + 6, 20, 20);
+        triangle(cx - 8, cy + 2, cx + 8, cy + 2, cx, cy - 10);
+        fill(200, 230, 255);
+        ellipse(cx - 4, cy + 4, 5, 5);
+    }
+
     void desenharAnimacoes() {
-        // Só desenha se o timer for maior que zero e a planta ainda existir
-        if (tempoAnimacaoRegador > 0 && indicePlantaRegando >= 0 && indicePlantaRegando < gerenciador.getJardim().getPlantas().size()) {
-            int[] xy = posicaoSlot(indicePlantaRegando);
-            PImage imgRegador = sprites.get("Regador");
+        // Só desenha se houver tempo restante e a planta for válida
+        if (tempoAnimacaoItem > 0 && indicePlantaAnimada >= 0 && indicePlantaAnimada < gerenciador.getJardim().getPlantas().size()) {
+            int[] xy = posicaoSlot(indicePlantaAnimada);
+            PImage imgSprite = sprites.get(spriteAnimacaoAtual);
 
-            if (imgRegador != null) {
-                // Cria um pequeno balanço usando a função sin() do Processing
-                float balancoY = sin(tempoAnimacaoRegador * 0.3f) * 10;
+            if (imgSprite != null) {
+                float balancoY = sin(tempoAnimacaoItem * 0.3f) * 10;
 
-                // Desenha o regador um pouco para a direita e acima do centro da planta
-                image(imgRegador, xy[0] + 250, xy[1] + 80 + balancoY, 150, 150);
+                // Desenha o item centralizado e acima da planta
+                image(imgSprite, xy[0] + 200, xy[1] + 60 + balancoY, 150, 150);
             }
 
-            // Diminui o timer 1 frame por vez
-            tempoAnimacaoRegador--;
+            tempoAnimacaoItem--;
         }
     }
 
     int[] posicaoSlot(int indice) {
         int coluna = indice % COLUNAS;
-
         int espacamentoX = 145;
 
         int x = LARGURA_SIDEBAR + 20 + (coluna * espacamentoX);
+        int linhaDoChao = 630;
 
-        int y = 155;
+        int y = linhaDoChao - TAM_SLOT;
 
         return new int[]{x, y};
     }
@@ -292,9 +294,13 @@ public class Sketch extends PApplet {
     // opções variam conforme a espécie/estágio
     String[] opcoesDeAcao(Planta planta) {
         java.util.List<String> opcoes = new java.util.ArrayList<>();
-        opcoes.add("Regar");
-        if (planta instanceof Tomateiro) opcoes.add("Fertilizar");
-        if (planta.getEstagio() == FaseCrescimento.ADULTA) opcoes.add("Colher");
+        if (!planta.isTaViva()) {
+            opcoes.add("Descartar");
+        } else {
+            opcoes.add("Regar");
+            if (planta instanceof Tomateiro) opcoes.add("Fertilizar");
+            if (planta.getEstagio() == FaseCrescimento.ADULTA) opcoes.add("Colher");
+        }
         opcoes.add("Ver informações");
         opcoes.add("Fechar (x)");
         return opcoes.toArray(new String[0]);
@@ -309,7 +315,7 @@ public class Sketch extends PApplet {
 
         fill(255, 255, 255, 240);
         stroke(0);
-        rect(300, 200, 300, 220, 8);
+        rect(300, 200, 300, 300, 8);
 
         fill(0);
         textAlign(LEFT);
@@ -323,14 +329,18 @@ public class Sketch extends PApplet {
         text("Qtd. de regas: " + planta.getQtdRegas(), x, y + salto * 5);
         text("Viva: " + (planta.isTaViva() ? "sim" : "não"), x, y + salto * 6);
 
+        textSize(12);
+        text(planta.getDicaCrescimento(), x, y + salto * 7, 270, 60);
+        textSize(14);
+
         fill(120, 0, 0);
         textAlign(RIGHT);
         text("[x] fechar", 585, 210);
     }
 
-    // ---------------------------------------------------------------
+    // -----------------------------------
     // INTERAÇÃO
-    // ---------------------------------------------------------------
+    // -----------------------------------
 
     public void mousePressed() {
         switch (estadoAtual) {
@@ -393,15 +403,20 @@ public class Sketch extends PApplet {
             switch (opcao) {
                 case "Regar":
                     gerenciador.regarPlanta(indicePlantaSelecionada);
-                    indicePlantaRegando = indicePlantaSelecionada;
-                    tempoAnimacaoRegador = 45;
+                    indicePlantaAnimada = indicePlantaSelecionada;
+                    spriteAnimacaoAtual = "Regador";
+                    tempoAnimacaoItem = 45;
                     estadoAtual = Estado.JARDIM;
                     break;
                 case "Fertilizar":
                     gerenciador.usarFertilizante(indicePlantaSelecionada);
+                    indicePlantaAnimada = indicePlantaSelecionada;
+                    spriteAnimacaoAtual = "Fertilizante"; // Usa o sprite de fertilizante!
+                    tempoAnimacaoItem = 45;
                     estadoAtual = Estado.JARDIM;
                     break;
                 case "Colher":
+                case "Descartar":
                     gerenciador.colherPlanta(indicePlantaSelecionada);
                     indicePlantaSelecionada = -1;
                     estadoAtual = Estado.JARDIM;

@@ -21,7 +21,11 @@ public class Cacto extends Planta {
         } else if (estagio == FaseCrescimento.JOVEM && idadeMs >= 60_000) {
             estagio = FaseCrescimento.ADULTA;
         }
+    }
 
-
+    @Override
+    public String getDicaCrescimento() {
+        return "Os cactos crescem sozinhos, no próprio tempo. Deixe-os em paz e eles florescerão!";
     }
 }
+
